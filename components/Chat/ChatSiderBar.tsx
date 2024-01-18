@@ -62,13 +62,6 @@ export const ChatSiderBar = () => {
             ))}
           </Flex>
         </ScrollArea>
-        <Box
-          width="auto"
-          onClick={() => onOpenPersonaPanel?.('chat')}
-          className="bg-token-surface-primary active:scale-95 "
-        >
-          <Text>Persona Store</Text>
-        </Box>
       </Flex>
     </Flex>
   )

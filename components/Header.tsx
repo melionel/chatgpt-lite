@@ -32,7 +32,7 @@ export const Header = ({ children, gitHubLink, ghost }: HeaderProps) => {
     >
       <Flex align="center" gap="3">
         <NextLink href="/">
-          <Heading as="h2">ChatGPTLite</Heading>
+          <Heading as="h2">Promptflow chatbot</Heading>
         </NextLink>
         <Flex align="center" gap="3" className="ml-auto">
           <HeaderUser />

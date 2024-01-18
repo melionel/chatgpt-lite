@@ -13,7 +13,7 @@ import Message from './Message'
 
 import './index.scss'
 
-export interface ChatProps {}
+export interface ChatProps { }
 
 export interface ChatGPInstance {
   setConversation: (messages: ChatMessage[]) => void
@@ -26,15 +26,32 @@ const postChatOrQuestion = async (chat: Chat, messages: any[], input: string) =>
 
   const data = chat.persona?.key
     ? {
-        key: chat.persona?.key,
-        messages: [...messages!],
-        question: input
-      }
+      key: chat.persona?.key,
+      messages: [...messages!],
+      question: input
+    }
     : {
-        prompt: chat?.persona?.prompt,
-        messages: [...messages!],
-        input
-      }
+      prompt: chat?.persona?.prompt,
+      messages: [...messages!],
+      input
+    }
+
+  return await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+}
+
+const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: string) => {
+  const url = '/api/chatwithpf'
+  const data = {
+    chat_id: chat.id,
+    messages: [...messages],
+    input
+  }
 
   return await fetch(url, {
     method: 'POST',
@@ -81,7 +98,8 @@ const Chat = (props: ChatProps, ref: any) => {
     setConversation?.([...conversation!, { content: input, role: 'user' }])
 
     try {
-      const response = await postChatOrQuestion(currentChat!, conversation, input)
+      const response = await postQuestionToPfChatbot(currentChat!, conversation, input)
+      // const response = await postChatOrQuestion(currentChat!, conversation, input)
 
       if (response.ok) {
         const data = response.body
@@ -206,12 +224,12 @@ const Chat = (props: ChatProps, ref: any) => {
   })
 
   useEffect(() => {
-    new clipboard('.copy-btn').on('success', () => {})
+    new clipboard('.copy-btn').on('success', () => { })
   }, [])
 
   return (
     <Flex direction="column" height="100%" className="relative" gap="3">
-      <Flex
+      {/* <Flex
         justify="between"
         align="center"
         py="3"
@@ -219,7 +237,7 @@ const Chat = (props: ChatProps, ref: any) => {
         style={{ backgroundColor: 'var(--gray-a2)' }}
       >
         <Heading size="4">{currentChat?.persona?.name || 'None'}</Heading>
-      </Flex>
+      </Flex> */}
       <ScrollArea
         className="flex-1 px-4"
         type="auto"
@@ -272,7 +290,7 @@ const Chat = (props: ChatProps, ref: any) => {
             >
               <FiSend className="h-4 w-4" />
             </IconButton>
-            <IconButton
+            {/* <IconButton
               variant="soft"
               color="gray"
               size="2"
@@ -281,7 +299,7 @@ const Chat = (props: ChatProps, ref: any) => {
               onClick={clearMessages}
             >
               <AiOutlineClear className="h-4 w-4" />
-            </IconButton>
+            </IconButton> */}
 
             <IconButton
               variant="soft"
