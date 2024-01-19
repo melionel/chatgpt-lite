@@ -213,6 +213,7 @@ const useChatHook = () => {
       chatList.forEach((chat) => {
         const messages = JSON.parse(localStorage.getItem(`ms_${chat?.id}`) || '[]') as ChatMessage[]
         messagesMap.current.set(chat.id!, messages)
+        chat.title = messages.length > 0 ? messages[0].content : "empty chat"
       })
 
       onChangeChat(currentChat || chatList[0])

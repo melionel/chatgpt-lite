@@ -72,6 +72,7 @@ const getPfChatbotStream = async (
                                 controller.enqueue(queue)
                             }
                         } catch (e) {
+                            console.log(element)
                             controller.error(e)
                         }
                     });
@@ -81,8 +82,7 @@ const getPfChatbotStream = async (
             const parser = createParser(onParse)
 
             for await (const chunk of res.body as any) {
-                // add '\n\n' to make the parser work, does not know the root cause
-                const str = decoder.decode(chunk) + '\n\n'
+                const str = decoder.decode(chunk)
                 parser.feed(str)
             }
             controller.close()

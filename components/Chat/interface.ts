@@ -17,6 +17,7 @@ export interface Chat {
   id: string
   persona?: Persona
   messages?: ChatMessage[]
+  title?: string
 }
 
 export type ChatRole = 'assistant' | 'user' | 'system'
