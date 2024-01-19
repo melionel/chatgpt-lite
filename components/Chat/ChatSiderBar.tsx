@@ -21,6 +21,8 @@ export const ChatSiderBar = () => {
     onOpenPersonaPanel
   } = useContext(ChatContext)
 
+  const isLastChat = chatList.length === 1
+
   return (
     <Flex direction="column" className={cs('chart-sider-bar', { show: toggleSidebar })}>
       <Flex className="p-2 h-full overflow-hidden w-64" direction="column" gap="3">
@@ -54,6 +56,7 @@ export const ChatSiderBar = () => {
                   variant="ghost"
                   color="gray"
                   radius="full"
+                  hidden={isLastChat}
                   onClick={(e) => {
                     e.stopPropagation()
                     onDeleteChat?.(chat)

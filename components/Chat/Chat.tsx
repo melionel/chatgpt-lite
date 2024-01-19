@@ -2,7 +2,7 @@
 
 import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
-import { Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes'
+import { Box, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes'
 import { FiSend } from 'react-icons/fi'
 import { AiOutlineClear, AiOutlineLoading3Quarters, AiOutlineUnorderedList } from 'react-icons/ai'
 import clipboard from 'clipboard'
@@ -242,6 +242,7 @@ const Chat = (props: ChatProps, ref: any) => {
       >
         <Heading size="4">{currentChat?.persona?.name || 'None'}</Heading>
       </Flex> */}
+      <Box height="2" />
       <ScrollArea
         className="flex-1 px-4"
         type="auto"
