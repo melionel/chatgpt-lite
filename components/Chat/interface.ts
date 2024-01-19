@@ -1,6 +1,7 @@
 export interface ChatMessage {
   content: string
   role: ChatRole
+  feedback?: string
 }
 
 export interface Persona {
