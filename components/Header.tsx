@@ -35,7 +35,6 @@ export const Header = ({ children, gitHubLink, ghost }: HeaderProps) => {
           <Heading as="h2">Promptflow chatbot</Heading>
         </NextLink>
         <Flex align="center" gap="3" className="ml-auto">
-          <HeaderUser />
           <Select.Root value={theme} onValueChange={setTheme}>
             <Select.Trigger radius="full" />
             <Select.Content>

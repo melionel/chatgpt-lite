@@ -70,12 +70,22 @@ const Message = (props: MessageProps) => {
   return (
     <Flex direction="column" gap="1" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <Flex gap="4" className="mb-5">
-        <Avatar
-          fallback={isUser ? <HiUser className="h-4 w-4" /> : <SiOpenai className="h-4 w-4" />}
-          color={isUser ? undefined : 'green'}
-          size="2"
-          radius="full"
-        />
+        {isUser && (
+          <Avatar
+            fallback={<HiUser className="h-4 w-4" />}
+            size="2"
+            radius="full"
+          />
+        )}
+        {!isUser && (
+          <Avatar
+            src="https://pfvscextension.blob.core.windows.net/images/assistant.png"
+            fallback="PF"
+            color='green'
+            size="2"
+            radius="full"
+          />
+        )}
         <Flex direction="column" gap="2" className="flex-1 pt-1 break-all">
           <Markdown>{content}</Markdown>
           {!isUser && isHovered && !hasFeedback && (

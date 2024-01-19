@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Flex, IconButton, ScrollArea, Text } from '@radix-ui/themes'
+import { Avatar, Box, Flex, IconButton, ScrollArea, Text } from '@radix-ui/themes'
 import React, { useContext } from 'react'
 import cs from 'classnames'
 import { SiOpenai } from 'react-icons/si'
@@ -29,7 +29,10 @@ export const ChatSiderBar = () => {
           onClick={() => onCreateChat?.(DefaultPersonas[0])}
           className="bg-token-surface-primary active:scale-95 "
         >
-          <SiOpenai className="h-5 w-5" />
+          <Avatar
+            src="https://pfvscextension.blob.core.windows.net/images/icon.svg"
+            fallback="PF"
+          />
           <Text>New Chat</Text>
         </Box>
         <ScrollArea className="flex-1" type="auto" scrollbars="vertical">
