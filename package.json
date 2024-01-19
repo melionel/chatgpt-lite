@@ -13,7 +13,7 @@
     "format:check": "prettier --check '**/*.{ts,tsx,js,html,css,md}'"
   },
   "engines": {
-    "node": "18.17.0"
+    "node": "18.2.0"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",
