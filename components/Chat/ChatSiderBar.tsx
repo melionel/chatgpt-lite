@@ -44,7 +44,7 @@ export const ChatSiderBar = () => {
                 onClick={() => onChangeChat?.(chat)}
               >
                 <Text as="p" className="truncate">
-                  {chat.title}
+                  {chat.title === undefined ? "empty chat" : chat.title}
                 </Text>
                 <IconButton
                   size="2"

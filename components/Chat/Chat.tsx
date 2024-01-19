@@ -97,6 +97,10 @@ const Chat = (props: ChatProps, ref: any) => {
     setIsLoading(true)
     setConversation?.([...conversation!, { content: input, role: 'user' }])
 
+    if (currentChat !== undefined && currentChat.title === undefined) {
+      currentChat.title = input
+    }
+
     try {
       const response = await postQuestionToPfChatbot(currentChat!, conversation, input)
       // const response = await postChatOrQuestion(currentChat!, conversation, input)
@@ -244,8 +248,8 @@ const Chat = (props: ChatProps, ref: any) => {
         scrollbars="vertical"
         style={{ height: '100%' }}
       >
-        {conversation?.map((item, index) => <Message key={index} message={item} />)}
-        {currentMessage && <Message message={{ content: currentMessage, role: 'assistant' }} />}
+        {conversation?.map((item, index) => <Message key={index} message={item} index={index} conversation={conversation} />)}
+        {currentMessage && <Message message={{ content: currentMessage, role: 'assistant' }} conversation={conversation} />}
         <div ref={bottomOfChatRef}></div>
       </ScrollArea>
       <div className="px-4 pb-3">

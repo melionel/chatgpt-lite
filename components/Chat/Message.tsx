@@ -7,26 +7,64 @@ import { SiOpenai } from 'react-icons/si'
 import { HiUser } from 'react-icons/hi'
 import { Markdown } from '@/components'
 import ChatContext from './chatContext'
-import { ChatMessage } from './interface'
+import { Chat, ChatMessage } from './interface'
 
 export interface MessageProps {
-  message: ChatMessage
+  message: ChatMessage,
+  index?: number,
+  conversation?: ChatMessage[]
 }
 
 const Message = (props: MessageProps) => {
   const { currentChat } = useContext(ChatContext)
   const { role, content, feedback } = props.message
   const isUser = role === 'user'
-  const hasFeedback = feedback !== undefined
+  let hasFeedback = feedback !== undefined
   const [isHovered, setIsHovered] = useState(false);
-  const feedbackColor = feedback === 'thumbUp' ? "red" : feedback === 'thumbDown' ? "blue" : "gray"
 
   const onThumbUp = async () => {
     props.message.feedback = "thumbUp"
+    hasFeedback = true
+    await postFeedback(currentChat!.id, "", "thumbUp")
   }
 
   const onThumbDown = async () => {
     props.message.feedback = "thumbDown"
+    hasFeedback = true
+    await postFeedback(currentChat!.id, "", "thumbDown")
+  }
+
+  const gatherConversations = () => {
+    const currentIndex = props.index
+    const feedbackConversations = props.conversation?.filter((chat, index) => {
+      return currentIndex === undefined || index <= currentIndex
+    })
+
+    const result = feedbackConversations?.map(chat => ({
+      role: chat.role,
+      content: chat.content
+    }))
+
+    return result
+  }
+
+  const postFeedback = async (chat_id: string, comment: string, feedback: string) => {
+    const url = '/api/feedback'
+    const conversation = gatherConversations()
+    const data = {
+      chat_id,
+      comment,
+      feedback,
+      conversation
+    }
+
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
   }
 
   return (
