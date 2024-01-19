@@ -78,50 +78,50 @@ const Message = (props: MessageProps) => {
         />
         <Flex direction="column" gap="2" className="flex-1 pt-1 break-all">
           <Markdown>{content}</Markdown>
+          {!isUser && isHovered && !hasFeedback && (
+            <Flex gap="2" align="center">
+              <IconButton
+                variant="soft"
+                color="gray"
+                size="1"
+                className="rounded-xl"
+                onClick={onThumbUp}
+              >
+                <FiThumbsUp className="h-4 w-4" />
+              </IconButton>
+              <IconButton
+                variant="soft"
+                color="gray"
+                size="1"
+                className="rounded-xl"
+                onClick={onThumbDown}
+              >
+                <FiThumbsDown className="h-4 w-4" />
+              </IconButton>
+            </Flex>
+          )}
+          {hasFeedback && (
+            <Flex gap="2" align="center">
+              <IconButton
+                variant="soft"
+                color={feedback === "thumbUp" ? "red" : "gray"}
+                size="1"
+                className="rounded-xl"
+              >
+                <FiThumbsUp className="h-4 w-4" />
+              </IconButton>
+              <IconButton
+                variant="soft"
+                color={feedback === "thumbDown" ? "blue" : "gray"}
+                size="1"
+                className="rounded-xl"
+              >
+                <FiThumbsDown className="h-4 w-4" />
+              </IconButton>
+            </Flex>
+          )}
         </Flex>
       </Flex>
-      {!isUser && isHovered && !hasFeedback && (
-        <Flex gap="4" align="center">
-          <IconButton
-            variant="soft"
-            color="gray"
-            size="1"
-            className="rounded-xl"
-            onClick={onThumbUp}
-          >
-            <FiThumbsUp className="h-4 w-4" />
-          </IconButton>
-          <IconButton
-            variant="soft"
-            color="gray"
-            size="1"
-            className="rounded-xl"
-            onClick={onThumbDown}
-          >
-            <FiThumbsDown className="h-4 w-4" />
-          </IconButton>
-        </Flex>
-      )}
-      {hasFeedback && (
-        <Flex gap="4" align="center">
-          <IconButton
-            variant="soft"
-            color={feedback === "thumbUp" ? "red" : "gray"}
-            size="1"
-            className="rounded-xl"
-          >
-            <FiThumbsUp className="h-4 w-4" />
-          </IconButton>
-          <IconButton
-            variant="soft"
-            color={feedback === "thumbDown" ? "blue" : "gray"}
-            size="1"
-            className="rounded-xl"
-          >
-            <FiThumbsDown className="h-4 w-4" />
-          </IconButton>
-        </Flex>
-      )}
     </Flex>
   )
 }
