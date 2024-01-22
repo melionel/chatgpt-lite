@@ -89,7 +89,6 @@ const getPfChatbotStream = async (
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
     console.log(input, chat_id)
-    console.log(chat_history)
     const res = await fetch(pfChatbotEndpoint, {
         method: 'POST',
         headers: {
@@ -99,7 +98,8 @@ const getPfChatbotStream = async (
         },
         body: JSON.stringify({
             question: input,
-            conversation_id: chat_id,
+            // use 'random as we are construct the chat_history at client now
+            conversation_id: 'random',
             chat_history: chat_history
         })
     })
