@@ -5,6 +5,36 @@ export interface Message {
     content: string
 }
 
+export interface ChatHistoryItem {
+    inputs: {
+        question: string;
+    };
+    outputs: {
+        output: string;
+    };
+}
+
+function constructChatHistory(objects: Message[]): ChatHistoryItem[] {
+    const transformedArray: ChatHistoryItem[] = [];
+    for (let i = 0; i < objects.length - 1; i++) {
+        if (objects[i].role === 'user') {
+            const nextObject = objects[i + 1];
+            const rBContent = nextObject !== undefined && nextObject.role === 'assistant' ? nextObject.content : '';
+
+            transformedArray.push({
+                inputs: { question: objects[i].content },
+                outputs: { output: rBContent }
+            });
+
+            if (nextObject.role === 'assistant') {
+                i = i + 1
+            }
+        }
+    }
+
+    return transformedArray;
+}
+
 export async function POST(req: NextRequest) {
     try {
         const { chat_id, messages, input } = (await req.json()) as {
@@ -13,7 +43,8 @@ export async function POST(req: NextRequest) {
             input: string
         }
 
-        const stream = await getPfChatbotStream(chat_id, input)
+        const chat_history = constructChatHistory(messages)
+        const stream = await getPfChatbotStream(chat_id, input, chat_history)
         return new NextResponse(stream, {
             headers: { 'Content-Type': 'text/event-stream' }
         })
@@ -27,7 +58,8 @@ export async function POST(req: NextRequest) {
 
 const getPfChatbotStream = async (
     chat_id: string,
-    input: string
+    input: string,
+    chat_history: ChatHistoryItem[]
 ) => {
 
     let pfChatbotEndpoint = process.env.PF_COPILOT_ENDPOINT
@@ -57,6 +89,7 @@ const getPfChatbotStream = async (
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
     console.log(input, chat_id)
+    console.log(chat_history)
     const res = await fetch(pfChatbotEndpoint, {
         method: 'POST',
         headers: {
@@ -67,7 +100,7 @@ const getPfChatbotStream = async (
         body: JSON.stringify({
             question: input,
             conversation_id: chat_id,
-            chat_history: []
+            chat_history: chat_history
         })
     })
 
@@ -85,7 +118,6 @@ const getPfChatbotStream = async (
             const onParse = (event: ParsedEvent | ReconnectInterval) => {
                 if (event.type === 'event') {
                     const data = event.data
-                    console.log(data)
                     if (data === '[DONE]') {
                         controller.close()
                         console.log('[DONE]')
