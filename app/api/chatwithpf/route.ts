@@ -31,12 +31,14 @@ const getPfChatbotStream = async (
 ) => {
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
-    const pfChatbotEndpoint = "https://pfchatbot-webapp.azurewebsites.net/chatstream"
+    const pfChatbotEndpoint = "https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/score"
     console.log(input, chat_id)
     const res = await fetch(pfChatbotEndpoint, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'text/event-stream',
+            'Authorization': 'Bearer b8gdOcJmhN7m011w5k6SAIHSWOe3CTTp',
         },
         body: JSON.stringify({
             question: input,
@@ -59,23 +61,23 @@ const getPfChatbotStream = async (
             const onParse = (event: ParsedEvent | ReconnectInterval) => {
                 if (event.type === 'event') {
                     const data = event.data
+                    console.log(data)
                     if (data === '[DONE]') {
                         controller.close()
+                        console.log('[DONE]')
                         return
                     }
-                    data.split("data: ").forEach(element => {
-                        try {
-                            const json = JSON.parse(element)
-                            if (json.output !== undefined) {
-                                const text = json.output
-                                const queue = encoder.encode(text)
-                                controller.enqueue(queue)
-                            }
-                        } catch (e) {
-                            console.log(element)
-                            controller.error(e)
+                    try {
+                        const json = JSON.parse(data)
+                        if (json.output !== undefined) {
+                            const text = json.output
+                            const queue = encoder.encode(text)
+                            controller.enqueue(queue)
                         }
-                    });
+                    } catch (e) {
+                        console.log(data)
+                        controller.error(e)
+                    };
                 }
             }
 

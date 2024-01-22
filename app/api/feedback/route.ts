@@ -13,11 +13,12 @@ export async function POST(req: NextRequest) {
             conversation: object[]
         }
 
-        const pfFeedbackEndpoint = "https://pfchatbot-webapp.azurewebsites.net/feedback"
+        const pfFeedbackEndpoint = "https://promptflow-chatbot-feedback.eastus.inference.ml.azure.com/score"
         const res = await fetch(pfFeedbackEndpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer m1FvTpE34nhlSbly8Kmh4oW3oWQ9ONPE',
             },
             body: JSON.stringify({
                 comment: comment,
