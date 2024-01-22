@@ -29,6 +29,15 @@ const getPfChatbotStream = async (
     chat_id: string,
     input: string
 ) => {
+
+    const myEnvVar = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
+
+    if (myEnvVar !== undefined) {
+        console.log("The value of APPLICATIONINSIGHTS_CONNECTION_STRING is:", myEnvVar);
+    } else {
+        console.log("APPLICATIONINSIGHTS_CONNECTION_STRING is not defined");
+    }
+
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
     const pfChatbotEndpoint = "https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/score"

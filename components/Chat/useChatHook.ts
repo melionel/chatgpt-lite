@@ -238,7 +238,6 @@ const useChatHook = () => {
   }, [chatList])
 
   useEffect(() => {
-    console.log('load persona from local storage')
     const loadedPersonas = JSON.parse(localStorage.getItem('Personas') || '[]') as Persona[]
     const updatedPersonas = loadedPersonas.map((persona) => {
       if (!persona.id) {
