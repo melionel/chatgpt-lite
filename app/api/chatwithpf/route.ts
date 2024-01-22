@@ -30,24 +30,39 @@ const getPfChatbotStream = async (
     input: string
 ) => {
 
-    const myEnvVar = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
+    let pfChatbotEndpoint = process.env.PF_COPILOT_ENDPOINT
 
-    if (myEnvVar !== undefined) {
-        console.log("The value of APPLICATIONINSIGHTS_CONNECTION_STRING is:", myEnvVar);
+    if (pfChatbotEndpoint !== undefined) {
+        console.log("The value of PF_COPILOT_ENDPOINT is:", pfChatbotEndpoint)
     } else {
-        console.log("APPLICATIONINSIGHTS_CONNECTION_STRING is not defined");
+        console.log("PF_COPILOT_ENDPOINT is not defined, use default");
+        pfChatbotEndpoint = 'https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/score'
+    }
+
+    let pfChatbotKey = process.env.PF_COPILOT_KEY
+    if (pfChatbotKey !== undefined) {
+        console.log("The value of PF_COPILOT_KEY is:", pfChatbotKey)
+    } else {
+        console.log("PF_COPILOT_KEY is not defined, use default");
+        pfChatbotKey = ''
+    }
+
+    let myvar = process.env.PF_COPILOT_STORAGE_CONNECTION_STRING
+    if (myvar !== undefined) {
+        console.log("The value of PF_COPILOT_STORAGE_CONNECTION_STRING is:", myvar)
+    } else {
+        console.log("PF_COPILOT_STORAGE_CONNECTION_STRING is not defined, use default");
     }
 
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
-    const pfChatbotEndpoint = "https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/score"
     console.log(input, chat_id)
     const res = await fetch(pfChatbotEndpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'text/event-stream',
-            'Authorization': 'Bearer b8gdOcJmhN7m011w5k6SAIHSWOe3CTTp',
+            'Authorization': pfChatbotKey,
         },
         body: JSON.stringify({
             question: input,
