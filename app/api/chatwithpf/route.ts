@@ -100,7 +100,8 @@ const getPfChatbotStream = async (
             question: input,
             // use 'random as we are construct the chat_history at client now
             conversation_id: 'random',
-            chat_history: chat_history
+            chat_history: chat_history,
+            inline_context: true
         })
     })
 
