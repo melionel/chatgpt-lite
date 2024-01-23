@@ -11,13 +11,13 @@
   background-color: var(--color-background);
   transition: 0.5s;
 
-  @apply max-md:absolute max-md:top-0 max-md:bottom-0   max-md:border-none max-md:w-0;
+  @apply max-md:absolute max-md:top-0 max-md:bottom-0 max-md:border-none max-md:w-0;
 
-  .rt-ScrollAreaViewport > div {
+  .rt-ScrollAreaViewport>div {
     display: block;
   }
 
-  > div {
+  >div {
     border-right: 1px solid var(--gray-a4);
   }
 
@@ -45,4 +45,16 @@
   &:hover {
     background-color: var(--accent-a3);
   }
+}
+
+.feedback-container {
+  opacity: 0;
+  /* Initially hide the buttons */
+  transition: opacity 0.3s ease;
+  /* Smooth transition for the opacity */
+}
+
+.flex-1:hover .feedback-container {
+  opacity: 1;
+  /* Show the buttons when the parent container is hovered */
 }

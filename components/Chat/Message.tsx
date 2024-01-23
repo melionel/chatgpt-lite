@@ -3,11 +3,11 @@
 import { useContext, useState } from 'react'
 import { Avatar, Box, Flex, Grid, IconButton } from '@radix-ui/themes'
 import { FiThumbsUp, FiThumbsDown } from 'react-icons/fi'
-import { SiOpenai } from 'react-icons/si'
 import { HiUser } from 'react-icons/hi'
 import { Markdown } from '@/components'
 import ChatContext from './chatContext'
 import { Chat, ChatMessage } from './interface'
+import './index.scss'
 
 export interface MessageProps {
   message: ChatMessage,
@@ -88,8 +88,8 @@ const Message = (props: MessageProps) => {
         )}
         <Flex direction="column" gap="2" className="flex-1 pt-1 break-all">
           <Markdown>{content}</Markdown>
-          {!isUser && isHovered && !hasFeedback && (
-            <Flex gap="2" align="center">
+          {!isUser && !hasFeedback && (
+            <Flex gap="2" align="center" className="feedback-container">
               <IconButton
                 variant="soft"
                 color="gray"
