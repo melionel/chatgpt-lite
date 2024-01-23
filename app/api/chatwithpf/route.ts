@@ -79,13 +79,6 @@ const getPfChatbotStream = async (
         pfChatbotKey = ''
     }
 
-    let myvar = process.env.PF_COPILOT_STORAGE_CONNECTION_STRING
-    if (myvar !== undefined) {
-        console.log("The value of PF_COPILOT_STORAGE_CONNECTION_STRING is:", myvar)
-    } else {
-        console.log("PF_COPILOT_STORAGE_CONNECTION_STRING is not defined, use default");
-    }
-
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
     console.log(input, chat_id)
