@@ -13,20 +13,21 @@ export async function POST(req: NextRequest) {
             conversation: object[]
         }
 
-        let pfFeedbackEndpoint = process.env.PF_COPILOT_FEEDBACK_ENDPOINT
+        let pfFeedbackEndpoint = process.env.PF_COPILOT_ENDPOINT
 
         if (pfFeedbackEndpoint !== undefined) {
             console.log("The value of PF_COPILOT_FEEDBACK_ENDPOINT is:", pfFeedbackEndpoint)
+            pfFeedbackEndpoint = pfFeedbackEndpoint + 'feedback'
         } else {
             console.log("PF_COPILOT_FEEDBACK_ENDPOINT is not defined, use default");
-            pfFeedbackEndpoint = 'https://promptflow-chatbot-feedback.eastus.inference.ml.azure.com/score'
+            pfFeedbackEndpoint = 'https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/feedback'
         }
 
-        let pfFeedbackKey = process.env.PF_COPILOT_FEEDBACK_KEY
+        let pfFeedbackKey = process.env.PF_COPILOT_KEY
         if (pfFeedbackKey !== undefined) {
-            console.log("The value of PF_COPILOT_FEEDBACK_KEY is:", pfFeedbackKey)
+            console.log("The value of PF_COPILOT_KEY is:", pfFeedbackKey)
         } else {
-            console.log("PF_COPILOT_FEEDBACK_KEY is not defined, use default");
+            console.log("PF_COPILOT_KEY is not defined, use default");
             pfFeedbackKey = ''
         }
 
@@ -37,9 +38,8 @@ export async function POST(req: NextRequest) {
                 'Authorization': pfFeedbackKey,
             },
             body: JSON.stringify({
-                comment: comment,
-                conversation_id: chat_id,
-                feedback: feedback,
+                message: comment,
+                rating: feedback,
                 conversation: conversation
             })
         })

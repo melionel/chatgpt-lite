@@ -23,15 +23,15 @@ const Message = (props: MessageProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const onThumbUp = async () => {
-    props.message.feedback = "thumbUp"
+    props.message.feedback = "thumbsUp"
     hasFeedback = true
-    await postFeedback(currentChat!.id, "", "thumbUp")
+    await postFeedback(currentChat!.id, "", "thumbsUp")
   }
 
   const onThumbDown = async () => {
-    props.message.feedback = "thumbDown"
+    props.message.feedback = "thumbsDown"
     hasFeedback = true
-    await postFeedback(currentChat!.id, "", "thumbDown")
+    await postFeedback(currentChat!.id, "", "thumbsDown")
   }
 
   const gatherConversations = () => {
@@ -114,7 +114,7 @@ const Message = (props: MessageProps) => {
             <Flex gap="2" align="center">
               <IconButton
                 variant="soft"
-                color={feedback === "thumbUp" ? "red" : "gray"}
+                color={feedback === "thumbsUp" ? "red" : "gray"}
                 size="1"
                 className="rounded-xl"
               >
@@ -122,7 +122,7 @@ const Message = (props: MessageProps) => {
               </IconButton>
               <IconButton
                 variant="soft"
-                color={feedback === "thumbDown" ? "blue" : "gray"}
+                color={feedback === "thumbsDown" ? "blue" : "gray"}
                 size="1"
                 className="rounded-xl"
               >

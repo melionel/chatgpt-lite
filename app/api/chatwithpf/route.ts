@@ -66,6 +66,7 @@ const getPfChatbotStream = async (
 
     if (pfChatbotEndpoint !== undefined) {
         console.log("The value of PF_COPILOT_ENDPOINT is:", pfChatbotEndpoint)
+        pfChatbotEndpoint = pfChatbotEndpoint + 'score'
     } else {
         console.log("PF_COPILOT_ENDPOINT is not defined, use default");
         pfChatbotEndpoint = 'https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/score'
