@@ -135,6 +135,9 @@ const useChatHook = () => {
     chatList.splice(index, 1)
     setChatList([...chatList])
     if (currentChat?.id === chat.id) {
+      const newMessages = messagesMap.current.get(chatList[0].id) || []
+      chatRef.current?.setConversation(newMessages)
+      chatRef.current?.focus()
       setCurrentChat(chatList[0])
     }
     if (chatList.length === 0) {
