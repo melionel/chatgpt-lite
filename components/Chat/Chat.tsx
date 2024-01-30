@@ -65,10 +65,8 @@ const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: strin
 const Chat = (props: ChatProps, ref: any) => {
   const { toast } = useToast()
   const toastRef = useRef<any>(null)
-  const { debug, currentChat, toggleSidebar, saveMessages, onToggleSidebar } =
+  const { debug, currentChat, toggleSidebar, isChatLoading, saveMessages, onToggleSidebar, chatChatLoadingState } =
     useContext(ChatContext)
-
-  const [isLoading, setIsLoading] = useState(false)
 
   const conversationRef = useRef<ChatMessage[]>()
 
@@ -94,7 +92,7 @@ const Chat = (props: ChatProps, ref: any) => {
       return
     }
     setMessage('')
-    setIsLoading(true)
+    chatChatLoadingState?.(true)
     setConversation?.([...conversation!, { content: input, role: 'user' }])
 
     if (currentChat !== undefined && currentChat.title === undefined) {
@@ -165,19 +163,19 @@ const Chat = (props: ChatProps, ref: any) => {
         }
       }
 
-      setIsLoading(false)
+      chatChatLoadingState?.(false)
     } catch (error: any) {
       console.error(error)
       toast({
         title: 'Error',
         description: error.message
       })
-      setIsLoading(false)
+      chatChatLoadingState?.(false)
     }
   }
 
   const handleKeypress = (e: any) => {
-    if (e.keyCode == 13 && !e.shiftKey) {
+    if (e.keyCode == 13 && !e.shiftKey && !isChatLoading) {
       sendMessage(e)
       e.preventDefault()
     }
@@ -208,10 +206,10 @@ const Chat = (props: ChatProps, ref: any) => {
   }, [conversation, currentChat?.id, saveMessages])
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isChatLoading) {
       textAreaRef.current?.focus()
     }
-  }, [isLoading])
+  }, [isChatLoading])
 
   useImperativeHandle(ref, () => {
     return {
@@ -269,12 +267,12 @@ const Chat = (props: ChatProps, ref: any) => {
             className="flex-1 rounded-3xl chat-textarea"
             tabIndex={0}
             value={message}
-            disabled={isLoading}
+            // disabled={isChatLoading}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeypress}
           />
           <Flex gap="3" className="absolute right-0 pr-4 bottom-2 pt">
-            {isLoading && (
+            {isChatLoading && (
               <Flex
                 width="6"
                 height="6"
@@ -287,7 +285,7 @@ const Chat = (props: ChatProps, ref: any) => {
             )}
             <IconButton
               variant="soft"
-              disabled={isLoading}
+              disabled={isChatLoading}
               color="gray"
               size="2"
               className="rounded-xl"
@@ -300,7 +298,7 @@ const Chat = (props: ChatProps, ref: any) => {
               color="gray"
               size="2"
               className="rounded-xl"
-              disabled={isLoading}
+              disabled={isChatLoading}
               onClick={clearMessages}
             >
               <AiOutlineClear className="h-4 w-4" />
@@ -311,7 +309,7 @@ const Chat = (props: ChatProps, ref: any) => {
               color="gray"
               size="2"
               className="rounded-xl md:hidden"
-              disabled={isLoading}
+              disabled={isChatLoading}
               onClick={onToggleSidebar}
             >
               <AiOutlineUnorderedList className="h-4 w-4" />

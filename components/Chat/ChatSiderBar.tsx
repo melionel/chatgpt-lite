@@ -15,6 +15,7 @@ export const ChatSiderBar = () => {
     chatList,
     DefaultPersonas,
     toggleSidebar,
+    isChatLoading,
     onDeleteChat,
     onChangeChat,
     onCreateChat,
@@ -30,6 +31,7 @@ export const ChatSiderBar = () => {
           width="auto"
           onClick={() => onCreateChat?.(DefaultPersonas[0])}
           className="bg-token-surface-primary active:scale-95 "
+          style={{ pointerEvents: !isChatLoading ? 'auto' : 'none' }}
         >
           <Avatar
             src="https://pfvscextension.blob.core.windows.net/images/icon.svg"
@@ -47,6 +49,7 @@ export const ChatSiderBar = () => {
                   active: currentChat?.id === chat.id
                 })}
                 onClick={() => onChangeChat?.(chat)}
+                style={{ pointerEvents: !isChatLoading ? 'auto' : 'none' }}
               >
                 <Text as="p" className="truncate">
                   {chat.title === undefined ? "empty chat" : chat.title.length > 20 ? chat.title.slice(0, 20) : chat.title}
@@ -57,6 +60,7 @@ export const ChatSiderBar = () => {
                   color="gray"
                   radius="full"
                   hidden={isLastChat}
+                  disabled={isChatLoading}
                   onClick={(e) => {
                     e.stopPropagation()
                     onDeleteChat?.(chat)

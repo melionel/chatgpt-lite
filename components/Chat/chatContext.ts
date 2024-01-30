@@ -15,6 +15,7 @@ const ChatContext = createContext<{
   personaModalLoading?: boolean
   openPersonaPanel?: boolean
   toggleSidebar?: boolean
+  isChatLoading?: boolean
   onOpenPersonaModal?: () => void
   onClosePersonaModal?: () => void
   setCurrentChat?: (chat: Chat) => void
@@ -28,6 +29,7 @@ const ChatContext = createContext<{
   onOpenPersonaPanel?: (type?: string) => void
   onClosePersonaPanel?: () => void
   onToggleSidebar?: () => void
+  chatChatLoadingState?: (state: boolean) => void
 }>({
   personaPanelType: 'chat',
   DefaultPersonas: [],

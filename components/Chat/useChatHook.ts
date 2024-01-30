@@ -78,6 +78,8 @@ const useChatHook = () => {
 
   const [toggleSidebar, setToggleSidebar] = useState<boolean>(false)
 
+  const [isChatLoading, setChatLoading] = useState<boolean>(false)
+
   const onOpenPersonaPanel = (type: string = 'chat') => {
     setPersonaPanelType(type)
     setOpenPersonaPanel(true)
@@ -129,6 +131,10 @@ const useChatHook = () => {
   const onToggleSidebar = useCallback(() => {
     setToggleSidebar((state) => !state)
   }, [])
+
+  const chatChatLoadingState = (state: boolean) => {
+    setChatLoading(state)
+  }
 
   const onDeleteChat = (chat: Chat) => {
     const index = chatList.findIndex((item) => item.id === chat.id)
@@ -275,6 +281,7 @@ const useChatHook = () => {
     openPersonaPanel,
     personaPanelType,
     toggleSidebar,
+    isChatLoading,
     onOpenPersonaModal,
     onClosePersonaModal,
     setCurrentChat,
@@ -287,7 +294,8 @@ const useChatHook = () => {
     saveMessages,
     onOpenPersonaPanel,
     onClosePersonaPanel,
-    onToggleSidebar
+    onToggleSidebar,
+    chatChatLoadingState,
   }
 }
 
