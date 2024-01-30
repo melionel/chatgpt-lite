@@ -247,8 +247,8 @@ const Chat = (props: ChatProps, ref: any) => {
         scrollbars="vertical"
         style={{ height: '100%' }}
       >
-        {conversation?.map((item, index) => <Message key={index} message={item} index={index} conversation={conversation} />)}
-        {currentMessage && <Message message={{ content: currentMessage, role: 'assistant' }} conversation={conversation} />}
+        {conversation?.map((item, index) => <Message key={index} message={item} index={index} conversation={conversation} isLastMessage={false} />)}
+        {currentMessage && <Message message={{ content: currentMessage, role: 'assistant' }} conversation={conversation} isLastMessage={true} />}
         <div ref={bottomOfChatRef}></div>
       </ScrollArea>
       <div className="px-4 pb-3">

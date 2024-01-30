@@ -12,25 +12,24 @@ import './index.scss'
 export interface MessageProps {
   message: ChatMessage,
   index?: number,
-  conversation?: ChatMessage[]
+  conversation?: ChatMessage[],
+  isLastMessage?: boolean
 }
 
 const Message = (props: MessageProps) => {
   const { currentChat } = useContext(ChatContext)
   const { role, content, feedback } = props.message
   const isUser = role === 'user'
-  let hasFeedback = feedback !== undefined
   const [isHovered, setIsHovered] = useState(false);
+  const isLastMessage = props.isLastMessage
 
   const onThumbUp = async () => {
     props.message.feedback = "thumbsUp"
-    hasFeedback = true
     await postFeedback(currentChat!.id, "", "thumbsUp")
   }
 
   const onThumbDown = async () => {
     props.message.feedback = "thumbsDown"
-    hasFeedback = true
     await postFeedback(currentChat!.id, "", "thumbsDown")
   }
 
@@ -88,11 +87,11 @@ const Message = (props: MessageProps) => {
         )}
         <Flex direction="column" gap="2" className="flex-1 pt-1 break-all">
           <Markdown>{content}</Markdown>
-          {!isUser && !hasFeedback && (
-            <Flex gap="2" align="center" className="feedback-container">
+          {!isUser && feedback === undefined && (
+            <Flex gap="2" align="center" style={{ opacity: isHovered && !isLastMessage ? '1' : '0', transition: 'opacity 0.3s ease' }}>
               <IconButton
                 variant="soft"
-                color="gray"
+                color={props.message.feedback === "thumbsUp" ? "red" : "gray"}
                 size="1"
                 className="rounded-xl"
                 onClick={onThumbUp}
@@ -101,7 +100,7 @@ const Message = (props: MessageProps) => {
               </IconButton>
               <IconButton
                 variant="soft"
-                color="gray"
+                color={props.message.feedback === "thumbsDown" ? "blue" : "gray"}
                 size="1"
                 className="rounded-xl"
                 onClick={onThumbDown}
@@ -110,7 +109,7 @@ const Message = (props: MessageProps) => {
               </IconButton>
             </Flex>
           )}
-          {hasFeedback && (
+          {feedback !== undefined && (
             <Flex gap="2" align="center">
               <IconButton
                 variant="soft"
