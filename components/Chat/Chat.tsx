@@ -293,7 +293,7 @@ const Chat = (props: ChatProps, ref: any) => {
             >
               <FiSend className="h-4 w-4" />
             </IconButton>
-            {/* <IconButton
+            <IconButton
               variant="soft"
               color="gray"
               size="2"
@@ -302,7 +302,7 @@ const Chat = (props: ChatProps, ref: any) => {
               onClick={clearMessages}
             >
               <AiOutlineClear className="h-4 w-4" />
-            </IconButton> */}
+            </IconButton>
 
             <IconButton
               variant="soft"

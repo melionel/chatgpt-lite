@@ -182,6 +182,7 @@ const useChatHook = () => {
     if (chatList.length === 0) {
       onOpenPersonaPanel('chat')
     }
+    localStorage.removeItem(`ms_${chat.id}`)
   }
 
   const onCreatePersona = async (values: any) => {

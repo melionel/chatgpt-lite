@@ -4,6 +4,7 @@ import { Avatar, Box, Flex, IconButton, ScrollArea, Text } from '@radix-ui/theme
 import React, { useContext } from 'react'
 import cs from 'classnames'
 import { SiOpenai } from 'react-icons/si'
+import { BiMessageDetail } from 'react-icons/bi'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import ChatContext from './chatContext'
 
@@ -51,9 +52,12 @@ export const ChatSiderBar = () => {
                 onClick={() => onChangeChat?.(chat)}
                 style={{ pointerEvents: !isChatLoading ? 'auto' : 'none' }}
               >
-                <Text as="p" className="truncate">
-                  {chat.title === undefined ? "empty chat" : chat.title.length > 20 ? chat.title.slice(0, 20) : chat.title}
-                </Text>
+                <Flex gap="2" align="center">
+                  <BiMessageDetail className="h-4 w-4" />
+                  <Text as="p" className="truncate">
+                    {chat.title === undefined ? "empty chat" : chat.title.length > 20 ? chat.title.slice(0, 20) : chat.title}
+                  </Text>
+                </Flex>
                 <IconButton
                   size="2"
                   variant="ghost"
