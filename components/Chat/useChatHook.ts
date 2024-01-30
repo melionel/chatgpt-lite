@@ -104,7 +104,7 @@ const useChatHook = () => {
     setCurrentFeedback(undefined)
   }
 
-  const onSetCurrentFeedback = (feedback: Feedback) => {
+  const onSetCurrentFeedback = (feedback: Feedback | undefined) => {
     setCurrentFeedback(feedback)
   }
 
