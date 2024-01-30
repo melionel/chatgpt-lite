@@ -126,7 +126,7 @@ const getPfChatbotStream = async (
                             controller.enqueue(queue)
                         }
                     } catch (e) {
-                        console.log(data)
+                        console.log(e)
                         controller.error(e)
                     };
                 }

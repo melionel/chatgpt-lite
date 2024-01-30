@@ -4,7 +4,7 @@ import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useStat
 
 import { Box, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes'
 import { FiSend } from 'react-icons/fi'
-import { AiOutlineClear, AiOutlineLoading3Quarters, AiOutlineUnorderedList } from 'react-icons/ai'
+import { AiOutlineClear, AiOutlineLoading3Quarters, AiOutlineUnorderedList, AiOutlineStop } from 'react-icons/ai'
 import clipboard from 'clipboard'
 import { useToast } from '@/components'
 import { ChatMessage, Chat } from './interface'
@@ -45,7 +45,7 @@ const postChatOrQuestion = async (chat: Chat, messages: any[], input: string) =>
   })
 }
 
-const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: string) => {
+const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: string, signal: any) => {
   const url = '/api/chatwithpf'
   const data = {
     chat_id: chat.id,
@@ -58,7 +58,8 @@ const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: strin
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+    signal: signal
   })
 }
 
@@ -80,6 +81,8 @@ const Chat = (props: ChatProps, ref: any) => {
 
   const bottomOfChatRef = useRef<HTMLDivElement>(null)
 
+  const [abortController, setController] = useState<AbortController | undefined>(undefined);
+
   const sendMessage = async (e: any) => {
     e.preventDefault()
     const input = textAreaRef.current?.value || ''
@@ -100,7 +103,11 @@ const Chat = (props: ChatProps, ref: any) => {
     }
 
     try {
-      const response = await postQuestionToPfChatbot(currentChat!, conversation, input)
+      const newController = new AbortController();
+      setController(newController);
+      const newsig = newController.signal
+
+      const response = await postQuestionToPfChatbot(currentChat!, conversation, input, newsig)
       // const response = await postChatOrQuestion(currentChat!, conversation, input)
 
       if (response.ok) {
@@ -171,6 +178,12 @@ const Chat = (props: ChatProps, ref: any) => {
         description: error.message
       })
       chatChatLoadingState?.(false)
+    }
+  }
+
+  const cancelSendMessage = () => {
+    if (abortController !== undefined) {
+      abortController.abort()
     }
   }
 
@@ -285,13 +298,13 @@ const Chat = (props: ChatProps, ref: any) => {
             )}
             <IconButton
               variant="soft"
-              disabled={isChatLoading}
               color="gray"
               size="2"
               className="rounded-xl"
-              onClick={sendMessage}
+              onClick={isChatLoading ? cancelSendMessage : sendMessage}
             >
-              <FiSend className="h-4 w-4" />
+              {!isChatLoading && (<FiSend className="h-4 w-4" />)}
+              {isChatLoading && (<AiOutlineStop className="h-4 w-4" />)}
             </IconButton>
             <IconButton
               variant="soft"
