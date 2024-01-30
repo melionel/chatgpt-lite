@@ -46,15 +46,3 @@
     background-color: var(--accent-a3);
   }
 }
-
-.feedback-container {
-  opacity: 0;
-  /* Initially hide the buttons */
-  transition: opacity 0.3s ease;
-  /* Smooth transition for the opacity */
-}
-
-.flex-1:hover .feedback-container {
-  opacity: 1;
-  /* Show the buttons when the parent container is hovered */
-}

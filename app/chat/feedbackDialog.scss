@@ -1,0 +1,23 @@
+.feedback-button {
+    // background-color: #4CAF50;
+    // /* Green background */
+    // color: white;
+    // /* White text */
+    // padding: 12px 20px;
+    /* Padding around the text */
+    border: 1px solid;
+    /* No border */
+    border-radius: 4px;
+    /* Rounded corners */
+    cursor: pointer;
+    /* Mouse cursor changes to a pointer */
+    // font-size: 16px;
+    /* Larger font size */
+    transition: box-shadow 0.3s ease;
+}
+
+.feedback-button:hover {
+    // background-color: #45a049;
+    box-shadow: 0 5px 5px #1F0099AF;
+    /* Darker shade of green on hover */
+}

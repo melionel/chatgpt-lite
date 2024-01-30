@@ -6,7 +6,7 @@ import { FiThumbsUp, FiThumbsDown } from 'react-icons/fi'
 import { HiUser } from 'react-icons/hi'
 import { Markdown } from '@/components'
 import ChatContext from './chatContext'
-import { Chat, ChatMessage } from './interface'
+import { Chat, ChatMessage, Feedback } from './interface'
 import './index.scss'
 
 export interface MessageProps {
@@ -17,7 +17,7 @@ export interface MessageProps {
 }
 
 const Message = (props: MessageProps) => {
-  const { currentChat } = useContext(ChatContext)
+  const { currentChat, onSetCurrentFeedback } = useContext(ChatContext)
   const { role, content, feedback } = props.message
   const isUser = role === 'user'
   const [isHovered, setIsHovered] = useState(false);
@@ -25,12 +25,12 @@ const Message = (props: MessageProps) => {
 
   const onThumbUp = async () => {
     props.message.feedback = "thumbsUp"
-    await postFeedback(currentChat!.id, "", "thumbsUp")
+    setFeedback(currentChat!.id, "thumbsUp")
   }
 
   const onThumbDown = async () => {
     props.message.feedback = "thumbsDown"
-    await postFeedback(currentChat!.id, "", "thumbsDown")
+    setFeedback(currentChat!.id, "thumbsDown")
   }
 
   const gatherConversations = () => {
@@ -47,23 +47,14 @@ const Message = (props: MessageProps) => {
     return result
   }
 
-  const postFeedback = async (chat_id: string, comment: string, feedback: string) => {
-    const url = '/api/feedback'
+  const setFeedback = (chat_id: string, feedback: string) => {
     const conversation = gatherConversations()
     const data = {
-      chat_id,
-      comment,
-      feedback,
-      conversation
+      id: chat_id,
+      feedback: feedback,
+      conversation: conversation
     }
-
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
+    onSetCurrentFeedback?.(data as Feedback)
   }
 
   return (

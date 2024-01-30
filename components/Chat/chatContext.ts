@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext } from 'react'
-import { Chat, ChatMessage, Persona } from './interface'
+import { Chat, ChatMessage, Feedback, Persona } from './interface'
 
 const ChatContext = createContext<{
   debug?: boolean
@@ -16,6 +16,10 @@ const ChatContext = createContext<{
   openPersonaPanel?: boolean
   toggleSidebar?: boolean
   isChatLoading?: boolean
+  currentFeedback?: Feedback
+  onSetCurrentFeedback?: (feedback: Feedback | undefined) => void
+  onSubmitFeedback?: (comment?: string) => void
+  onCloseFeedbackDialog?: () => void
   onOpenPersonaModal?: () => void
   onClosePersonaModal?: () => void
   setCurrentChat?: (chat: Chat) => void

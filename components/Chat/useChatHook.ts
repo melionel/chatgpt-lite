@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid'
 import { ChatGPInstance } from './Chat'
 import { useSearchParams } from 'next/navigation'
 
-import { ChatMessage, Chat, Persona } from './interface'
+import { ChatMessage, Chat, Persona, Feedback } from './interface'
 import { useToast } from '..'
 
 export const DefaultPersonas: Persona[] = [
@@ -80,6 +80,8 @@ const useChatHook = () => {
 
   const [isChatLoading, setChatLoading] = useState<boolean>(false)
 
+  const [currentFeedback, setCurrentFeedback] = useState<Feedback | undefined>(undefined)
+
   const onOpenPersonaPanel = (type: string = 'chat') => {
     setPersonaPanelType(type)
     setOpenPersonaPanel(true)
@@ -96,6 +98,37 @@ const useChatHook = () => {
   const onClosePersonaModal = () => {
     setEditPersona(undefined)
     setIsOpenPersonaModal(false)
+  }
+
+  const onCloseFeedbackDialog = () => {
+    setCurrentFeedback(undefined)
+  }
+
+  const onSetCurrentFeedback = (feedback: Feedback) => {
+    setCurrentFeedback(feedback)
+  }
+
+  const onSubmitFeedback = async (comment?: string) => {
+    if (currentFeedback !== undefined) {
+      const url = '/api/feedback'
+      const chat_id = currentFeedback.id
+      const feedback = currentFeedback.feedback
+      const conversation = currentFeedback.conversation
+      const data = {
+        chat_id,
+        comment,
+        feedback,
+        conversation
+      }
+
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+    }
   }
 
   const onChangeChat = useCallback(
@@ -282,6 +315,10 @@ const useChatHook = () => {
     personaPanelType,
     toggleSidebar,
     isChatLoading,
+    currentFeedback,
+    onSetCurrentFeedback,
+    onSubmitFeedback,
+    onCloseFeedbackDialog,
     onOpenPersonaModal,
     onClosePersonaModal,
     setCurrentChat,

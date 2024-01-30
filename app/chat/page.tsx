@@ -4,6 +4,7 @@ import { Flex } from '@radix-ui/themes'
 import { Chat, ChatSiderBar, PersonaPanel, ChatContext, useChatHook } from '@/components'
 
 import PersonaModal from './PersonaModal'
+import FeedbackDialog from './FeedbackDialog'
 
 const ChatPage = () => {
   const provider = useChatHook()
@@ -18,6 +19,7 @@ const ChatPage = () => {
         </div>
       </Flex>
       <PersonaModal />
+      <FeedbackDialog />
     </ChatContext.Provider>
   )
 }

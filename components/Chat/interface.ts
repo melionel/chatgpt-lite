@@ -21,4 +21,11 @@ export interface Chat {
   title?: string
 }
 
+export interface Feedback {
+  id?: string
+  message?: string
+  feedback?: string
+  conversation?: any[]
+}
+
 export type ChatRole = 'assistant' | 'user' | 'system'
