@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
         let pfFeedbackKey = process.env.PF_COPILOT_KEY
         if (pfFeedbackKey !== undefined) {
-            console.log("The value of PF_COPILOT_KEY is:", pfFeedbackKey)
+            // console.log("The value of PF_COPILOT_KEY is:", pfFeedbackKey)
         } else {
             console.log("PF_COPILOT_KEY is not defined, use default");
             pfFeedbackKey = ''

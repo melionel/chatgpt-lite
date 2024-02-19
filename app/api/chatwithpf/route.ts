@@ -74,7 +74,7 @@ const getPfChatbotStream = async (
 
     let pfChatbotKey = process.env.PF_COPILOT_KEY
     if (pfChatbotKey !== undefined) {
-        console.log("The value of PF_COPILOT_KEY is:", pfChatbotKey)
+        // console.log("The value of PF_COPILOT_KEY is:", pfChatbotKey)
     } else {
         console.log("PF_COPILOT_KEY is not defined, use default");
         pfChatbotKey = ''

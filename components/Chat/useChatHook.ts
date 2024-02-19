@@ -137,6 +137,7 @@ const useChatHook = () => {
       const newMessages = messagesMap.current.get(chat.id) || []
       chatRef.current?.setConversation(newMessages)
       chatRef.current?.focus()
+      chatRef.current?.setFollowups([])
       messagesMap.current.set(currentChat?.id!, oldMessages)
       setCurrentChat(chat)
     },
@@ -148,7 +149,8 @@ const useChatHook = () => {
       const id = uuid()
       const newChat: Chat = {
         id,
-        persona: persona
+        persona: persona,
+        followups: []
       }
 
       setChatList((state) => {

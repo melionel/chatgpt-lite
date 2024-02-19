@@ -2,7 +2,7 @@
 
 import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
-import { Box, Flex, Heading, IconButton, ScrollArea, TextArea } from '@radix-ui/themes'
+import { Box, Flex, Heading, IconButton, ScrollArea, TextArea, Callout } from '@radix-ui/themes'
 import { FiSend } from 'react-icons/fi'
 import { AiOutlineClear, AiOutlineLoading3Quarters, AiOutlineUnorderedList, AiOutlineStop } from 'react-icons/ai'
 import clipboard from 'clipboard'
@@ -19,6 +19,7 @@ export interface ChatGPInstance {
   setConversation: (messages: ChatMessage[]) => void
   getConversation: () => ChatMessage[]
   focus: () => void
+  setFollowups: (followups: string[]) => void
 }
 
 const postChatOrQuestion = async (chat: Chat, messages: any[], input: string) => {
@@ -63,6 +64,22 @@ const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: strin
   })
 }
 
+const getSimulationResponse = async (messages: any[], signal: any) => {
+  const url = '/api/simulation'
+  const data = {
+    messages: [...messages],
+  }
+
+  return await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data),
+    signal: signal
+  })
+}
+
 const Chat = (props: ChatProps, ref: any) => {
   const { toast } = useToast()
   const toastRef = useRef<any>(null)
@@ -75,6 +92,8 @@ const Chat = (props: ChatProps, ref: any) => {
 
   const [message, setMessage] = useState('')
 
+  const [followups, setFollowups] = useState<string[]>([])
+
   const [currentMessage, setCurrentMessage] = useState<string>('')
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -83,17 +102,7 @@ const Chat = (props: ChatProps, ref: any) => {
 
   const [abortController, setController] = useState<AbortController | undefined>(undefined);
 
-  const sendMessage = async (e: any) => {
-    e.preventDefault()
-    const input = textAreaRef.current?.value || ''
-
-    if (input.length < 1) {
-      toast({
-        title: 'Error',
-        description: 'Please enter a message.'
-      })
-      return
-    }
+  const sendMessageInternal = async (input: string) => {
     setMessage('')
     chatChatLoadingState?.(true)
     setConversation?.([...conversation!, { content: input, role: 'user' }])
@@ -152,6 +161,32 @@ const Chat = (props: ChatProps, ref: any) => {
           ])
           setCurrentMessage('')
         }, 1)
+
+        const simResponse = await getSimulationResponse([
+          ...conversation!,
+          { content: input, role: 'user' },
+          { content: resultContent, role: 'assistant' }
+        ], newsig)
+        if (simResponse.ok) {
+          const data = await simResponse.json()
+          const simQuestions = data['data']['question']
+          if (simQuestions === '[STOP]') {
+            setFollowups([])
+          }
+          else {
+            const datas = simQuestions.split(/\r?\n/)
+            setFollowups(datas)
+            if (currentChat !== undefined) {
+              currentChat.followups = datas
+            }
+          }
+        }
+        else {
+          const result = await simResponse.json()
+          console.log('Failed to get simulation result!')
+          console.log(result)
+        }
+
       } else {
         const reuslt = await response.json()
         if (response.status === 401) {
@@ -169,7 +204,6 @@ const Chat = (props: ChatProps, ref: any) => {
           })
         }
       }
-
       chatChatLoadingState?.(false)
     } catch (error: any) {
       console.error(error)
@@ -178,7 +212,22 @@ const Chat = (props: ChatProps, ref: any) => {
         description: error.message
       })
       chatChatLoadingState?.(false)
+      setFollowups([])
     }
+  }
+
+  const sendMessage = async (e: any) => {
+    e.preventDefault()
+    const input = textAreaRef.current?.value || ''
+
+    if (input.length < 1) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a message.'
+      })
+      return
+    }
+    sendMessageInternal(input)
   }
 
   const cancelSendMessage = () => {
@@ -196,6 +245,7 @@ const Chat = (props: ChatProps, ref: any) => {
 
   const clearMessages = () => {
     setConversation([])
+    setFollowups([])
   }
 
   useEffect(() => {
@@ -234,6 +284,9 @@ const Chat = (props: ChatProps, ref: any) => {
       },
       focus: () => {
         textAreaRef.current?.focus()
+      },
+      setFollowups(followups: string[]) {
+        setFollowups(followups)
       }
     }
   })
@@ -264,6 +317,13 @@ const Chat = (props: ChatProps, ref: any) => {
         {currentMessage && <Message message={{ content: currentMessage, role: 'assistant' }} conversation={conversation} isLastMessage={true} />}
         <div ref={bottomOfChatRef}></div>
       </ScrollArea>
+      {!isChatLoading && followups !== undefined && followups.length !== 0 && <Flex direction="column" gap="1" align="end">
+        {followups.map((item, index) => <Callout.Root key={index} size="1" className='followup-callout' onClick={() => sendMessageInternal(item)}>
+          <Callout.Text>
+            {item}
+          </Callout.Text>
+        </Callout.Root>)}
+      </Flex>}
       <div className="px-4 pb-3">
         <Flex align="end" justify="between" gap="3" className="relative">
           <TextArea

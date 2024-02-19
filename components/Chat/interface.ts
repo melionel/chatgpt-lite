@@ -18,7 +18,8 @@ export interface Chat {
   id: string
   persona?: Persona
   messages?: ChatMessage[]
-  title?: string
+  title?: string,
+  followups?: string[]
 }
 
 export interface Feedback {
