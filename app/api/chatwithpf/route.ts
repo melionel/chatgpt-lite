@@ -1,5 +1,7 @@
 import { createParser, ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 import { NextRequest, NextResponse } from 'next/server'
+import { fetchWithRetry } from '../util'
+
 export interface Message {
     role: string
     content: string
@@ -83,7 +85,7 @@ const getPfChatbotStream = async (
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
     console.log(input, chat_id)
-    const res = await fetch(pfChatbotEndpoint, {
+    const res = await fetchWithRetry(pfChatbotEndpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -95,7 +97,7 @@ const getPfChatbotStream = async (
             // use 'random as we are construct the chat_history at client now
             conversation_id: 'random',
             chat_history: chat_history,
-            inline_context: true
+            inline_context: true,
         })
     })
 

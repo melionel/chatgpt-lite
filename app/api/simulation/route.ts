@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { fetchWithRetry } from '../util';
+
 export interface Message {
     role: string
     content: string
@@ -71,7 +73,7 @@ const getSimulationResponse = async (
         pfChatbotSimKey = ''
     }
 
-    const res = await fetch(pfChatbotSimEndpoint, {
+    const res = await fetchWithRetry(pfChatbotSimEndpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { fetchWithRetry } from '../util'
+
 export interface Message {
     role: string
     content: string
@@ -31,7 +33,7 @@ export async function POST(req: NextRequest) {
             pfFeedbackKey = ''
         }
 
-        const res = await fetch(pfFeedbackEndpoint, {
+        const res = await fetchWithRetry(pfFeedbackEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
