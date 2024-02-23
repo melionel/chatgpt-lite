@@ -17,6 +17,7 @@ const ChatContext = createContext<{
   toggleSidebar?: boolean
   isChatLoading?: boolean
   currentFeedback?: Feedback
+  qaModel?: string
   onSetCurrentFeedback?: (feedback: Feedback | undefined) => void
   onSubmitFeedback?: (comment?: string) => void
   onCloseFeedbackDialog?: () => void
@@ -34,11 +35,13 @@ const ChatContext = createContext<{
   onClosePersonaPanel?: () => void
   onToggleSidebar?: () => void
   chatChatLoadingState?: (state: boolean) => void
+  onChangeModel?: (model: string) => void
 }>({
   personaPanelType: 'chat',
   DefaultPersonas: [],
   chatList: [],
-  personas: []
+  personas: [],
+  qaModel: 'gpt-4'
 })
 
 export default ChatContext

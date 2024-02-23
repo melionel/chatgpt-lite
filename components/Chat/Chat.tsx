@@ -46,12 +46,13 @@ const postChatOrQuestion = async (chat: Chat, messages: any[], input: string) =>
   })
 }
 
-const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: string, signal: any) => {
+const postQuestionToPfChatbot = async (chat: Chat, messages: any[], input: string, signal: any, qaModel: string) => {
   const url = '/api/chatwithpf'
   const data = {
     chat_id: chat.id,
     messages: [...messages],
-    input
+    input,
+    model: qaModel
   }
 
   return await fetch(url, {
@@ -83,7 +84,7 @@ const getSimulationResponse = async (messages: any[], signal: any) => {
 const Chat = (props: ChatProps, ref: any) => {
   const { toast } = useToast()
   const toastRef = useRef<any>(null)
-  const { debug, currentChat, toggleSidebar, isChatLoading, saveMessages, onToggleSidebar, chatChatLoadingState } =
+  const { debug, currentChat, toggleSidebar, isChatLoading, qaModel, saveMessages, onToggleSidebar, chatChatLoadingState } =
     useContext(ChatContext)
 
   const conversationRef = useRef<ChatMessage[]>()
@@ -116,7 +117,12 @@ const Chat = (props: ChatProps, ref: any) => {
       setController(newController);
       const newsig = newController.signal
 
-      const response = await postQuestionToPfChatbot(currentChat!, conversation, input, newsig)
+      let model = qaModel
+      console.log(qaModel)
+      if (model === undefined) {
+        model = 'gpt-4'
+      }
+      const response = await postQuestionToPfChatbot(currentChat!, conversation, input, newsig, model)
       // const response = await postChatOrQuestion(currentChat!, conversation, input)
 
       if (response.ok) {
@@ -206,11 +212,13 @@ const Chat = (props: ChatProps, ref: any) => {
       }
       chatChatLoadingState?.(false)
     } catch (error: any) {
-      console.error(error)
-      toast({
-        title: 'Error',
-        description: error.message
-      })
+      if (error !== 'cancel current request' && error.name !== 'AbortError') {
+        console.error(error)
+        toast({
+          title: 'Error',
+          description: error.message
+        })
+      }
       chatChatLoadingState?.(false)
       setFollowups([])
     }
@@ -232,7 +240,7 @@ const Chat = (props: ChatProps, ref: any) => {
 
   const cancelSendMessage = () => {
     if (abortController !== undefined) {
-      abortController.abort()
+      abortController.abort('cancel current request')
     }
   }
 

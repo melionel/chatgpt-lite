@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar, Box, Flex, IconButton, ScrollArea, Text } from '@radix-ui/themes'
+import { Avatar, Box, Flex, IconButton, ScrollArea, Text, Select } from '@radix-ui/themes'
 import React, { useContext } from 'react'
 import cs from 'classnames'
 import { SiOpenai } from 'react-icons/si'
@@ -17,10 +17,12 @@ export const ChatSiderBar = () => {
     DefaultPersonas,
     toggleSidebar,
     isChatLoading,
+    qaModel,
     onDeleteChat,
     onChangeChat,
     onCreateChat,
-    onOpenPersonaPanel
+    onOpenPersonaPanel,
+    onChangeModel
   } = useContext(ChatContext)
 
   const isLastChat = chatList.length === 1
@@ -76,6 +78,18 @@ export const ChatSiderBar = () => {
             ))}
           </Flex>
         </ScrollArea>
+        <div className="px-4 pb-3">
+          <Select.Root defaultValue={qaModel} size="3" onValueChange={(value) => onChangeModel?.(value)}>
+            <Select.Trigger variant="ghost" />
+            <Select.Content>
+              <Select.Group>
+                <Select.Label>Choose LLM Model</Select.Label>
+                <Select.Item value="gpt-4">gpt-4</Select.Item>
+                <Select.Item value="gpt-35-turbo-16k">gpt-35-turbo-16k</Select.Item>
+              </Select.Group>
+            </Select.Content>
+          </Select.Root>
+        </div>
       </Flex>
     </Flex>
   )

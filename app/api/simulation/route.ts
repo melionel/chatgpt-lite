@@ -62,7 +62,7 @@ const getSimulationResponse = async (
         pfChatbotSimEndpoint = pfChatbotSimEndpoint + 'score'
     } else {
         console.log("PF_SIM_ENDPOINT is not defined, use default");
-        pfChatbotSimEndpoint = 'https://simulation-flow.eastus.inference.ml.azure.com/score'
+        pfChatbotSimEndpoint = 'https://simulation-flow-2-21.eastus.inference.ml.azure.com/score'
     }
 
     let pfChatbotSimKey = process.env.PF_SIM_KEY

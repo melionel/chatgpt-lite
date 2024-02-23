@@ -82,6 +82,13 @@ const useChatHook = () => {
 
   const [currentFeedback, setCurrentFeedback] = useState<Feedback | undefined>(undefined)
 
+  const [qaModel, setQaModel] = useState<string>('gpt-4')
+
+  const onChangeModel = (model: string) => {
+    console.log('on change model')
+    setQaModel(model)
+  }
+
   const onOpenPersonaPanel = (type: string = 'chat') => {
     setPersonaPanelType(type)
     setOpenPersonaPanel(true)
@@ -319,6 +326,7 @@ const useChatHook = () => {
     toggleSidebar,
     isChatLoading,
     currentFeedback,
+    qaModel,
     onSetCurrentFeedback,
     onSubmitFeedback,
     onCloseFeedbackDialog,
@@ -336,6 +344,7 @@ const useChatHook = () => {
     onClosePersonaPanel,
     onToggleSidebar,
     chatChatLoadingState,
+    onChangeModel,
   }
 }
 

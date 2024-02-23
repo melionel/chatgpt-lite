@@ -39,14 +39,15 @@ function constructChatHistory(objects: Message[]): ChatHistoryItem[] {
 
 export async function POST(req: NextRequest) {
     try {
-        const { chat_id, messages, input } = (await req.json()) as {
+        const { chat_id, messages, input, model } = (await req.json()) as {
             chat_id: string
             messages: Message[]
             input: string
+            model: string
         }
 
         const chat_history = constructChatHistory(messages)
-        const stream = await getPfChatbotStream(chat_id, input, chat_history)
+        const stream = await getPfChatbotStream(chat_id, input, chat_history, model)
         return new NextResponse(stream, {
             headers: { 'Content-Type': 'text/event-stream' }
         })
@@ -61,7 +62,8 @@ export async function POST(req: NextRequest) {
 const getPfChatbotStream = async (
     chat_id: string,
     input: string,
-    chat_history: ChatHistoryItem[]
+    chat_history: ChatHistoryItem[],
+    model: string
 ) => {
 
     let pfChatbotEndpoint = process.env.PF_COPILOT_ENDPOINT
@@ -84,7 +86,7 @@ const getPfChatbotStream = async (
 
     const encoder = new TextEncoder()
     const decoder = new TextDecoder()
-    console.log(input, chat_id)
+    console.log(input, chat_id, model)
     const res = await fetchWithRetry(pfChatbotEndpoint, {
         method: 'POST',
         headers: {
@@ -98,6 +100,7 @@ const getPfChatbotStream = async (
             conversation_id: 'random',
             chat_history: chat_history,
             inline_context: true,
+            model: model
         })
     })
 
@@ -112,7 +115,11 @@ const getPfChatbotStream = async (
 
     return new ReadableStream({
         async start(controller) {
+            let isStreamClosed = false // Flag to track stream state
+
             const onParse = (event: ParsedEvent | ReconnectInterval) => {
+                if (isStreamClosed) return
+
                 if (event.type === 'event') {
                     const data = event.data
                     if (data === '[DONE]') {
@@ -129,7 +136,10 @@ const getPfChatbotStream = async (
                         }
                     } catch (e) {
                         console.log(e)
-                        controller.error(e)
+                        if (!isStreamClosed) { // Only call error if the stream isn't closed
+                            controller.error(e)
+                            isStreamClosed = true // Consider stream closed after an error
+                        }
                     };
                 }
             }
@@ -137,10 +147,16 @@ const getPfChatbotStream = async (
             const parser = createParser(onParse)
 
             for await (const chunk of res.body as any) {
+                if (isStreamClosed) break
+
                 const str = decoder.decode(chunk)
                 parser.feed(str)
             }
-            controller.close()
+
+            if (!isStreamClosed) { // Ensure stream is closed properly if not already done
+                controller.close()
+                isStreamClosed = true
+            }
         }
     })
 }
