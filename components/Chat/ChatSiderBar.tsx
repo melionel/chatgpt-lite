@@ -4,7 +4,7 @@ import { Avatar, Box, Flex, IconButton, ScrollArea, Text, Select } from '@radix-
 import React, { useContext } from 'react'
 import cs from 'classnames'
 import { SiOpenai } from 'react-icons/si'
-import { BiMessageDetail } from 'react-icons/bi'
+import { BiMessageDetail, BiEdit } from 'react-icons/bi'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import ChatContext from './chatContext'
 
@@ -37,8 +37,7 @@ export const ChatSiderBar = () => {
           style={{ pointerEvents: !isChatLoading ? 'auto' : 'none' }}
         >
           <Avatar
-            src="https://pfvscextension.blob.core.windows.net/images/icon.svg"
-            fallback="PF"
+            fallback={<BiEdit className="h-6 w-6" />}
           />
           <Text>New Chat</Text>
         </Box>
