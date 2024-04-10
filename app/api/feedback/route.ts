@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
             pfFeedbackEndpoint = pfFeedbackEndpoint + 'feedback'
         } else {
             console.log("PF_COPILOT_FEEDBACK_ENDPOINT is not defined, use default");
-            pfFeedbackEndpoint = 'https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/feedback'
+            pfFeedbackEndpoint = 'https://pf-copilot-sea.southeastasia.inference.ml.azure.com/feedback'
         }
 
         let pfFeedbackKey = process.env.PF_COPILOT_KEY

@@ -73,7 +73,7 @@ const getPfChatbotStream = async (
         pfChatbotEndpoint = pfChatbotEndpoint + 'score'
     } else {
         console.log("PF_COPILOT_ENDPOINT is not defined, use default");
-        pfChatbotEndpoint = 'https://prompt-flow-eastus-nosave.eastus.inference.ml.azure.com/score'
+        pfChatbotEndpoint = 'https://pf-copilot-sea.southeastasia.inference.ml.azure.com/score'
     }
 
     let pfChatbotKey = process.env.PF_COPILOT_KEY
@@ -96,10 +96,7 @@ const getPfChatbotStream = async (
         },
         body: JSON.stringify({
             question: input,
-            // use 'random as we are construct the chat_history at client now
-            conversation_id: 'random',
             chat_history: chat_history,
-            inline_context: true,
             model: model
         })
     })
