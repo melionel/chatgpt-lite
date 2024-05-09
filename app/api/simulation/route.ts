@@ -17,7 +17,8 @@ export interface SimChatHistoryItem {
 
 function constructChatHistory(objects: Message[]): SimChatHistoryItem[] {
     const transformedArray: SimChatHistoryItem[] = [];
-    for (let i = 0; i < objects.length - 1; i++) {
+    let start = Math.max(0, objects.length - 10);
+    for (let i = start; i < objects.length - 1; i++) {
         if (objects[i].role === 'user') {
             const nextObject = objects[i + 1];
             const rBContent = nextObject !== undefined && nextObject.role === 'assistant' ? nextObject.content : '';
